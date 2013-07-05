@@ -1,0 +1,3 @@
+hg init
+hg add -X '*.svn*' -X '**/*.svn*/*'
+hg ci -m init

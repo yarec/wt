@@ -1,0 +1,14 @@
+# curl -kL http://install.perlbrew.pl | bash
+# perlbrew -n install perl-5.14.4
+# perlbrew install-cpanm
+# curl -k -L http://cpanmin.us | perl - -n -S --mirror http://mirrors.163.com/cpan App::cpanminus
+cpanm -n -S --mirror http://mirrors.163.com/cpan --installdeps .
+cd pm
+make clean
+./Makefile.PL
+make
+sudo make install
+make clean
+cd ..
+sudo cp log4perl.conf /etc/
+sudo cp pl/wt /usr/bin/

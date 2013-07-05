@@ -1,0 +1,435 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"          _
+"      __ | \
+"     /   | /
+"     \__ | \
+" by yarec - ?
+"
+" MISC
+"
+"  Tip:
+"   If you want get encoding problem in errors message the ":language en" will show errors in english
+"  Example:
+"   Go into command-line mode and type helpgrep nocompatible, ie.
+"   :helpgrep nocompatible
+"   then press <leader>c to see the results, or :botright cw
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" First Setting
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Get out of VI's compatible mode..
+set nocompatible
+set t_Co=256
+
+"runtime! debian.vim
+
+" Load Plugins
+if  $VUNDLE == "true"
+    "runtime! $WTPATH/vim/bundle/vundle.vim
+    execute  "source $WTPATH/vim/bundle/vundle.vim"
+else
+    execute  "source $WTPATH/vim/bundle/static.vim"
+
+    autocmd FileType cpp source $RV_VIMRT/lang/cpp.vim
+    autocmd FileType java source $RV_VIMRT/lang/java.vim
+    autocmd FileType perl source $RV_VIMRT/lang/perl.vim
+    autocmd FileType php source $RV_VIMRT/lang/php.vim
+
+endif
+
+
+
+
+
+"exec    "normal :language en_US.UTF8"
+
+" Load amix-vimrc
+execute  "source $WTPATH/vim/amix-vimrcs/basic.vim"
+execute  "source $WTPATH/vim/amix-vimrcs/extended.vim"
+
+set rtp+=$RV_VIMRT
+
+
+" Overwrite amix-vimrc, and must be comment in amix-vimrc
+let psc_style='cool'
+colorscheme ps_color
+
+
+
+
+try
+    lang en_US
+catch
+endtry
+
+set iskeyword+=$,@     " Add extra characters that are valid parts of variables
+
+
+"Have the mouse enabled all the time:
+"set mouse=a
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Delete Menu
+aunmenu *
+silent! unlet did_install_default_menus
+silent! unlet did_install_syntax_menu
+if exists("did_menu_trans")
+    menutrans clear
+    unlet did_menu_trans
+endif
+silent! unlet find_help_dialog
+silent! unlet menutrans_help_dialog
+silent! unlet menutrans_path_dialog
+silent! unlet menutrans_tags_dialog
+silent! unlet menutrans_textwidth_dialog
+silent! unlet menutrans_fileformat_dialog
+silent! unlet menutrans_no_file
+
+
+
+autocmd BufEnter * :syntax sync fromstart
+
+" Encoding UTF-8
+if has("win16") || has("win32")
+    set encoding=cp936
+elseif has("linux")
+    set encoding=utf8
+endif
+set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
+set termencoding=utf-8
+
+"Highlight current
+if has("gui_running")
+    set cursorline
+    hi cursorline guibg=#333333
+    hi CursorColumn guibg=#333333
+else
+    set cursorline
+    hi cursorline ctermbg=241
+    hi CursorColumn ctermbg=4 ctermfg=3 cterm=underline
+endif
+
+"Omni menu colors
+hi Pmenu guibg=#333333
+hi PmenuSel guibg=#555555 guifg=#ffffff
+
+nmap <leader>fd :se ff=dos<cr>
+nmap <leader>fu :se ff=unix<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Files and backups, Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Turn backup on
+set undodir=~/.vim/tmp//     " undo files
+set backupdir=~/.vim/tmp// " backups
+set directory=~/.vim/tmp//   " swap files
+set backup
+set wb
+set swapfile
+
+map <leader>t2 :set shiftwidth=2<cr>
+map <leader>t4 :set shiftwidth=4<cr>
+
+"C-style indeting
+set cindent
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Command mode related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+cno $tc <C-\>eCurrentFileDir("tabnew")<cr>
+cno $th tabnew ~/
+cno $td tabnew ~/Desktop/
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Moving around, tabs and buffers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Actually, the tab does not switch buffers, but my arrows
+"Bclose function ca be found in "Buffer related" section
+map <down> <esc><c-e>
+map <up> <esc><c-y>
+
+"nav tabs
+map <right> :tabnext<cr>
+map <s-tab> :tabnext<cr>
+map <left> :tabprevious<cr>
+map <m-tab> :tabprevious<cr>
+
+"Tab configuration
+map <leader>an :tabnew %<cr>
+map <leader>tb :tabnew<cr>
+map <leader>tn :tabnext<cr>
+map <leader>tp :tabprevious<cr>
+map <leader>t. ,cd:tabedit .<cr>
+map <leader>tc :tabclose<cr>
+map <leader>to :tabo<cr>
+map <leader>tm :tabmove
+
+"Moving fast to front, back and 2 sides ;)
+imap <c-a> <esc>$a
+imap <c-e> <esc>0i
+imap <D-$> <esc>$a
+imap <D-0> <esc>0i
+
+"Open a dummy buffer for paste
+map <leader>b :e ~/buffer<cr>
+
+"Restore cursor to file position in previous editing session
+set viminfo='10,\"100,:20,%,n~/.viminfo
+au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
+
+" Buffer - reverse everything ... :)
+"map <F10> ggVGg?
+
+
+""""""""""""""""""""""""""""""
+" => Statusline
+""""""""""""""""""""""""""""""
+"Format the statusline
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ %r%{getcwd()}%h\ \ \ [POS:\ %l/%L:%c][%p%%]\ \ \ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ 
+
+
+"FIXME 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Parenthesis/bracket expanding
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au BufNewFile,BufRead *.\(vim\)\@! inoremap " ""<esc>:let leavechar='"'<cr>i
+au BufNewFile,BufRead *.\(txt\)\@! inoremap ' ''<esc>:let leavechar="'"<cr>i
+
+imap <m-l> <esc>:exec "normal f" . leavechar<cr>a
+imap <d-l> <esc>:exec "normal f" . leavechar<cr>a
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General Abbrevs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"My information
+iab xname Rentie
+iab xinfo /**<cr>@date:<c-r>=strftime(" %m-%d-20%y %H:%M")<cr><cr>@author Rentie<cr>*/<esc>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Editing mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set completeopt=menu
+
+"FIXME 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Folding
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Enable folding, I find it very useful
+set nofen
+set fdl=0
+
+
+""""""""""""""""""""""""""""""
+" LaTeX Suite things
+""""""""""""""""""""""""""""""
+set grepprg=grep\ -nH\ $*
+let g:Tex_DefaultTargetFormat="pdf"
+let g:Tex_ViewRule_pdf='xpdf'
+
+"Bindings
+autocmd FileType tex map <silent><leader><space> :w!<cr> :silent! call Tex_RunLaTeX()<cr>
+
+"Auto complete some things ;)
+autocmd FileType tex inoremap $i \indent
+autocmd FileType tex inoremap $* \cdot
+autocmd FileType tex inoremap $i \item
+autocmd FileType tex inoremap $m \[<cr>\]<esc>O
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Filetype generic
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au BufRead,BufNewFile *.cf,*.cfg,*.conf set filetype=cfg
+au BufRead,BufNewFile *.pl,*.pm,*.perl set filetype=perl
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Todo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au FileType c,cpp,java,javascript imap \q <ESC>i//FIXME<SPACE>
+au FileType perl imap \q <ESC>i#FIXME<SPACE>
+au FileType vim imap \q <ESC>i"FIXME<SPACE>
+map \q i//FIXME<SPACE>
+
+"imap \w <ESC>:vimgrep --exclude=*~ TODO_ITEM * <CR> :copen <CR>
+"map \w :vimgrep --exclude=*~ TODO_ITEM * <CR> :copen <CR> 
+
+
+
+"""""""""""""""""""""""""""""""
+" XML
+"""""""""""""""""""""""""""""""
+autocmd FileType xml inorea <buffer> cport <c-r>=IMAP_PutTextWithMovement( "<connectors>\n<connector implementation=\"org.mortbay.jetty.nio.SelectChannelConnector\">\n<port>8081</port>\n</connector>\n</connectors>\n")<cr>
+
+au BufEnter *.sablecc,*.scc set ft=sablecc
+
+
+""""""""""""""""""""""""""""""
+" Scheme bidings
+""""""""""""""""""""""""""""""
+autocmd BufNewFile,BufRead *.scm map <buffer> <leader><space> <leader>cd:w<cr>:!petite %<cr>
+autocmd BufNewFile,BufRead *.scm inoremap <buffer> <C-t> (pretty-print )<esc>i
+autocmd BufNewFile,BufRead *.scm vnoremap <C-t> <esc>`>a)<esc>`<i(pretty-print <esc>
+
+
+""""""""""""""""""""""""""""""
+" SVN section
+"""""""""""""""""""""""""""""""
+map <F8> :new<CR>:read !svn diff<CR>:set syntax=diff buftype=nofile<CR>gg
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Cope
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"Orginal for all
+map <leader>n :cn<cr>
+map <leader>p :cp<cr>
+"map <leader>c :botright cw 10<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MISC
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"Yank selection
+vmap cp "+y
+
+"Paste toggle - when pasting something in, don't indent.
+set pastetoggle=<F3>
+
+"Show help message
+map <S-F1> :call Help()<cr>
+
+"Remove indenting on empty lines
+map <C-F2> :%s/\s*$//g<cr>:noh<cr>''
+
+"Remove all blank lines
+map <C-F3> :call RemoveBlankLines()<cr>
+
+"Change all the '\' to '/'
+map <C-F4> :%s/\\/\//g<cr>
+
+"Change current line's '\' to '/'
+map <C-F5> :s/\\/\//g<cr>
+
+"Iterator format
+map <C-F6> :call ReConstructWrap()<cr>:call IteratorFormat(0,0)<cr>
+
+"GenLinks
+map <C-F7> :call GenLinks()<cr>
+map <C-F8> :!wt -explorer .<cr><cr>
+map <C-m> <C-W>100+
+map <C-TAB> <C-W>w<C-m>
+
+map <F2> :!wt -explorer<cr>
+"map <F2> :call Sysexport()<cr>
+map <F4> ,tc
+
+map <F5> ,cd:e%<cr>
+map <F6> ,cd:!wt -rmvn <cr>
+map <F7> ,cd,cp
+map <F8> :!clear <cr> :make test <cr>
+
+map <F9> ,cd:!clear && %<cr>
+map <F12> :TOhtml<cr>
+
+"Super paste
+inoremap <C-v> <esc>l:set paste<cr>mui<C-R>+<esc>mv'uV'v=:set nopaste<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Fast doing
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <leader>yf "xyf
+nmap <leader>yw "xyw
+nmap <leader>xp "xp
+
+"Misc
+nmap <leader>gl :call GenLinks()<cr>
+imap <tab> <c-j>
+nmap <leader>f mxgg=G'x
+nmap <leader>ta :ta
+nmap <leader>te :tabedit 
+nmap <leader>eac :call AddComment()<cr>
+nmap <leader>erc :call RemoveComment()<cr>
+
+"Fast fold & unfold
+nmap <leader>o zR
+nmap <leader>c zM
+
+"Fast call system command
+nmap <leader>d :!
+
+if has("win16") || has("win32")
+    nmap <leader>sh :!start msyshell.bat<cr>
+elseif has("linux")
+    nmap <leader>sh :!konsole --workdir %:p:h<cr>
+endif
+
+"Fast do colon 
+nmap <leader>cm :
+
+if has("win16") || has("win32")
+    nmap <leader>lc :cd %:p:h<cr>:!compile.bat<cr>
+    nmap <leader>cp :!compile.bat<cr>
+    nmap <leader>gg :!run.bat<cr>
+else
+    nmap <leader>lc :cd %:p:h<cr>:!compile.sh<cr>
+    nmap <leader>cp :!compile.sh<cr>
+    nmap <leader>gg :!run.sh<cr>
+endif
+
+"Fast quiting
+nmap <leader>qa :qa!<cr>
+nmap <leader>q :q!<cr>
+nmap <leader>xa :wqa!<cr>
+nmap <leader>x :wq!<cr>
+
+"Fast Edit #
+nmap <leader>ep :e#<cr>
+nmap <leader>e. ,cd:e.<cr>
+nmap <leader>ed ,cd:e 
+
+"Fast reloading of the .vimrc
+map <leader>s :source $WTPATH/vim/vimrc<cr>
+
+"Fast editing of rv.pl conf
+map <leader>tt :tabedit $WTPATH/pl/wt.pl<cr>,tm0<cr>
+map <leader>tf :tabedit ~/.wt/conf<cr>,tm0<cr>
+map <leader>tbf :tabedit $WTPATH/pl/conf<cr>,tm0<cr>
+
+"Fast editing of .vimrc
+map <leader>r :e! $WTPATH/vim/vimrc<cr>
+map <leader>tr :tabedit ~/.wt/vimrc<cr>,tm0<cr>
+map <leader>tbr :tabedit $WTPATH/vim/vimrc<cr>,tm0<cr>
+map <leader>tv :tabedit ~/.wt/rvrc.vim<cr>,tm0<cr>
+map <leader>tbv :tabedit $WTPATH/vim/rvrc.vim<cr>,tm0<cr>
+map <F11> :source $WTPATH/vim/rvrc.vim<cr>
+"When .vimrc is edited, reload it
+autocmd! bufwritepost vimrc source $WTPATH/vim/vimrc
+autocmd! bufwritepost rvrc.vim source $WTPATH/vim/rvrc.vim
+
+"Some nice mapping to switch syntax (useful if one mixes different languages in one file)
+map <leader>1 :set ft=cpp<cr>
+map <leader>2 :set ft=java<cr>
+"map <leader>1 :imapc <buffer><cr>:source $WTPATH/vim/vimrc<cr>:set syntax=java<cr>
+map <leader>3 :set ft=perl<cr>
+map <leader>4 :set ft=javascript<cr>
+map <leader>5 :set ft=html<cr>
+map <leader>$ :syntax sync fromstart<cr>
+
+autocmd BufNewFile,BufRead * :cd %:p:h
+
+so $RV_VIMRT/funcs.vim
+
+" conf plugin
+map <leader>tl :TlistToggle<cr>

@@ -1,0 +1,57 @@
+NAME
+    wt.pl - Daily Tool
+
+SYNOPSIS
+    wt [options]
+
+     Options: -{ help | open | see | enva | do7z | explorer | uniq | [cirt]mvn | runserver }
+
+        if no option, vim will be invoke to edit a file.
+
+        -help|?           display this help
+        -open             Open sys file
+                          args2->file mapping table:
+                          [ default        ]   { /pl/rv.pl     }
+                          [ "conf" , "cfg" ]   { /pl/conf      }
+                          [ "rvrc" , "rc"  ]   { /vim/rvrc.vim }
+                          [ "vimrc", "vrc" ]   { /vim/vimrc    }
+        -see 
+        -enva
+        -do7z
+        -explorer
+        -uniq             replace duplicate line in file
+        -smtp             send mail
+
+        -mysqlserver      Start mysql server
+        -h2server         Start H2 server
+
+        -rsnserver        Start resin server
+        -caserver         Start My Catalyst Server
+        -tomcat           Start tomcat server
+
+        -mvn option       Exec mvn command
+        -cmvn             Create mvn project
+        -imvn             Install jar to respo
+        -rmvn             Start jetty server(mvn plugin)
+        -tmvn option      Exec mvn test [ default all | give one Test Class ]
+
+     Examples:
+         $wt file.txt
+         $wt -tomcat
+         $wt -tomcat s (shutdown tomcat)
+
+     See also:
+        Nothing Here!
+
+DESCRIPTION
+    Invoke some other util command or program via this wt interface
+
+    Some detail description
+
+AUTHOR
+    Rentie <rwtest@gmail.com> Maintained by myself.
+
+COPYRIGHT
+    This library is free software, you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+

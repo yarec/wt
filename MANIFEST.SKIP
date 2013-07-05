@@ -1,0 +1,7 @@
+.hg/
+ex-cat/
+~$
+.bak$
+.old$
+.tar.gz$
+.git/

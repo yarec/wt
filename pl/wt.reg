@@ -1,0 +1,16 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Environment]
+"PATH"="e:\\usr\\share\\wt\\res\\bin;e:\\usr\\share\\wt\\res\\bat;e:\\usr\\share\\perl\\bin;e:\\usr\\share\\jdk1.6.0_02\\bin"
+"JAVA_HOME"="e:\\usr\\share\\jdk1.6.0_02"
+"EXE4J_JAVA_HOME"="e:\\usr\\shere\\jdk1.6.0_02"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\RV]
+@="&RV"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\RV\Command]
+@="e:\\usr\\share\\perl\\bin\\perl.exe e:\\usr\\share\\wt\\pl\\wt.pl \"%1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\vim]
+@="&VIM"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\*\shell\vim\Command]
+@="e:\\usr\\share\\vim\\vim7\\gvim.exe \"%1\""

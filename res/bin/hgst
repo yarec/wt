@@ -1,0 +1,1 @@
+hg st -X '*.svn*' -X '**/*.svn*/*' -X '**/*.csv' -X '**/*.class' -X '**/*.jar'

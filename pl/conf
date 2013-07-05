@@ -1,0 +1,84 @@
+debug: 0
+
+debug_log: /var/log/wtlog
+
+# explorer-win32 nautilus-linux  konsole-kde
+file_explorer: explorer
+see:
+    uc: /app/tomcat/logs/catalina.out
+
+vim:
+    home: /usr/bin
+    bin:  vim
+
+    rc: vim/rvrc.vim
+    rtpath: vim/vimfiles
+    vundle: false
+    openlist: 
+        - /upg
+
+java:
+    home: /usr/share/jdk1.6.0_02
+    cp:
+
+proc:
+    timeout: 30
+    uc:
+         grep: apache
+         key:  tomcat_uc
+         startcmd: echo start
+         stopcmd: echo stop
+
+tomcat:
+        home: /tomcat
+        start: bin/startup.sh jpda
+
+ssh: 
+     100:
+          host: 192.168.1.100
+          user: user
+          pass: pass
+
+bitbucket:
+    user: user
+    pass: pass
+
+smtp:
+     user: user
+     pass: pass
+     content: testcontentxxx
+
+     host: 
+           - ip
+     from: 
+           - from@from.from
+     tolist:
+           - to@to.to
+
+maven:
+        home: /usr/share/apache-maven-2
+        bin:  /bin/mvn
+        offline: true
+        notest: truea
+        test: NoteDaoTest,NoteManagerTest,NoteTypeManagerTest
+        cmd: 
+              c:
+                 artifact: -DartifactId=
+                 app: archetype:create -DgroupId=cn.hello
+                 web: -DarchetypeArtifactId=maven-archetype-webapp
+                 apf: -DarchetypeGroupId=org.appfuse.archetypes -DarchetypeArtifactId=appfuse-basic-struts -DremoteRepositories=http://static.appfuse.org/releases -DarchetypeVersion=2.0.2 
+                 diy: -DarchetypeGroupId=cn.hello -DarchetypeArtifactId=myapp -DarchetypeVersion=1.0-SNAPSHOT
+                 pom: -DarchetypeGroupId=cn.hello -DarchetypeArtifactId=pom -DarchetypeVersion=1
+              i: iiiii
+
+resin:
+        home: /resin
+
+mysql:
+        home: /mysql
+        bin:  /bin/mysqld --console
+h2:
+        home: /h2
+        jar:  h2.jar
+
+
