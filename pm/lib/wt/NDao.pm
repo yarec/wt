@@ -13,7 +13,7 @@ our $VERSION = '0.102080';
 
 sub BUILD {
     my $this = shift;
-    $this->cls( $this->db->notes);
+    $this->cls( $this->db->get_collection( 'notes' ) );
     $this->seq('seq_note');
 }
 sub save {
@@ -117,7 +117,7 @@ sub getShortByTids {
 
     my $records = $this->cls->find( { 'tid'=> {'$in'=> $tids} } )->
         sort({ 'id'=>-1 })->limit($limit)->skip($skip)->fields(
-        {'id'=>1, 'name'=>1, 'format'=>1, 'dateline'=>1, 'notedate'=>1} 
+        {'id'=>1, 'name'=>1, 'desc'=>1,'format'=>1, 'dateline'=>1, 'notedate'=>1} 
     );
 
     $this->to_arr( $records );

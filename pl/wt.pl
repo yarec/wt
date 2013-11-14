@@ -362,9 +362,15 @@ sub hgexec {
         my @repos = &bbkrepos($user, $pass);
 
         foreach my $repo(@repos) {
-            ptln "\n    [** $$repo{name} **]";
-            my $repourl = "https://$user:$pass\@bitbucket.org/yarec/$$repo{name}";
-            sysexec "hg clone $repourl /upg/$$repo{name}";
+            print "\n    [** $$repo{name} **]";
+            my $path = "/upg/$$repo{name}";
+            if(-e $path or $$repo{name} eq 'perloku'){
+                ptln " -> exists!";
+            }
+            else{
+                my $repourl = "https://$user:$pass\@bitbucket.org/yarec/$$repo{name}";
+                sysexec "hg clone $repourl $path";
+            }
         }
     }
     else{
@@ -687,11 +693,15 @@ sub ssh {
     my $user = "";
     my $pass = "";
     my $host = "";
+    my $port = "";
 
     if( $#args==1 ) {
-        $host = $$c{ssh}{$args[1]}{host};
-        $user = $$c{ssh}{$args[1]}{user};
-        $pass = $$c{ssh}{$args[1]}{pass};
+        my $cfg = $$c{ssh}{$args[1]};
+        $host = $$cfg{host};
+        $user = $$cfg{user};
+        $pass = $$cfg{pass};
+        $port = $$cfg{port};
+        $port = 22 if ! $port;
     }
     else {
         die qq/This option work with two parm!/;
@@ -706,16 +716,17 @@ sub ssh {
             ptfile($sshexp, &sshscript);
             chmod 0777,$sshexp;
         }
-        sysexec "$sshexp $host $user $pass";
+        my $cmd = "$sshexp $host $user '$pass' $port";
+        sysexec $cmd;
     }
     else{
         use Expect;
 
         my $exp = new Expect;
         $exp->slave->clone_winsize_from(\*STDIN);
-        my $command = "ssh $user\@$host";
-        $exp->spawn($command);
-        $exp->expect(2,[
+        my $cmd = "ssh $user\@$host -p $port";
+        $exp->spawn($cmd);
+        $exp->expect(5,[
                 qr/password:/i,
                 sub {
                     my $self = shift ;
@@ -845,8 +856,9 @@ set timeout 30
 set server [lindex $argv 0]
 set user [lindex $argv 1]
 set pass [lindex $argv 2]
+set port [lindex $argv 3]
 
-spawn ssh $user@$server
+spawn ssh $user@$server -p $port
 
 expect {
   "> " { }

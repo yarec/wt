@@ -46,6 +46,10 @@ function! AddComment()
       let s:comment_string = "\\/\\/"
     endif
 
+    if &ft == "scheme"
+      let s:comment_string = ";"
+    endif
+
     exec    "normal mx"
     let s:line_num_AddComment = line(".")
     exec    "normal 'a"
@@ -68,6 +72,10 @@ function! RemoveComment()
 
     if ( &ft == "java" || &ft == "javascript" || &ft == "cpp" || &ft == "c" || &ft == "php") 
       let s:comment_string = "\\s\*\\/\\/"
+    endif
+
+    if &ft == "scheme"
+      let s:comment_string = "\\s\*;"
     endif
 
     exec    "normal mx"

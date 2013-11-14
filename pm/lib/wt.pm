@@ -7,6 +7,7 @@ require Exporter;
 
 use FindBin '$Bin';
 use Log::Log4perl qw(:easy);
+use utf8::all;
 my $log;
 BEGIN {
     my $log4perl_conf = "$Bin/log4perl.conf";

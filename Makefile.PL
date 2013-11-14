@@ -13,6 +13,7 @@ WriteMakefile(
 		    'JSON::Tiny' =>'',
 		    'Expect' =>'',
 		    'IO::Stty' =>'',
+		    'utf8::all' =>'',
 		    'Getopt::Long::Descriptive' =>'',
     },
 );

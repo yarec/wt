@@ -26,6 +26,9 @@ sub BUILD {
     if($this->cfg){
         $this->conn( MongoDB::Connection->new( $this->cfg ) );
     }
+    elsif($this->conn){
+        $this->conn( $this->conn );
+    }
     else{
         $this->conn( MongoDB::Connection->new() );
     }
@@ -118,13 +121,6 @@ sub to_arr {
     foreach($records->all){
         my $record = $_;
         delete $$record{_id};
-        $$record{caption} = $$record{name};
-        $$record{text} = $$record{name};
-        $$record{value} = encode_entities($$record{value});
-        $$record{notedate} = $$record{notedate}?$$record{notedate}->sec:time;
-        $$record{cls} = 'folder';
-        $$record{sub} = 1;
-        #$$record{leaf} = 0;
         push  @ret, $record;
     }
     return @ret;

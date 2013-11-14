@@ -1,4 +1,5 @@
 # curl -kL http://install.perlbrew.pl | bash
+# curl -kL https://raw.github.com/gugod/App-perlbrew/develop/perlbrew-install|bash
 # perlbrew -n install perl-5.14.4
 # perlbrew install-cpanm
 # curl -k -L http://cpanmin.us | perl - -n -S --mirror http://mirrors.163.com/cpan App::cpanminus

@@ -1,4 +1,4 @@
-package wt::NtDao;
+package wt::ShareDao;
 
 use Moose;
 use Data::Dumper;
@@ -8,13 +8,13 @@ our $VERSION = '0.102080';
 
 sub BUILD {
     my $this = shift;
-    $this->cls( $this->db->get_collection( 'notetypes' ) );
-    $this->seq('seq_nt');
+    $this->cls( $this->db->get_collection( 'share' ) );
+    $this->seq('seq_share');
 }
 
 sub save {
     my ( $this, $nt, $force_ins ) = @_;
-    my $pid = $$nt{pid}?$$nt{pid}+0:-100;
+    my $tags= $$nt{tags}?$$nt{tags}+0:0;
     my $id = $$nt{id};
     my $_id = 0;
 
@@ -30,56 +30,20 @@ sub save {
     else{
         $_id = $this->cls->insert({
                 "id" => $this->nextval,
-                "name" => $$nt{name},
-                "pid" => $pid
+                'gplusid'=>$$nt{gplusid},
+                "imgurl" => $$nt{imgurl},
+                "fullimgurl" => $$nt{fullimgurl},
+                "annotation" => $$nt{annotation},
+                "title" => $$nt{title},
+                "content" => $$nt{content},
+                "url" => $$nt{url},
+                "tags" => $tags
             });
     }
 
     $this->getId( $_id );
 }
 
-sub getNtids {
-    my ($this, @ids) = @_;
-    my @nt_ids = ();
-    foreach my $r (@ids){
-        push @nt_ids, $r->{id};
-    }
-    return @nt_ids;
-}
-
-sub getSubNtIds {
-    my ($this, $p) = @_;
-
-    my @subnt_ids = ();
-    if(ref($p) eq 'ARRAY'){
-        foreach my $id (@{$p}){
-            my $_ids = $this->getSubNtIds($id);
-            push @subnt_ids , $this->getSubNtIds($id);
-        }
-    }
-    else{
-        @subnt_ids = $this->getNtids( $this->getSubs($p) );
-        push @subnt_ids , $this->getSubNtIds(\@subnt_ids);
-    }
-
-    @subnt_ids = sort {$a<=>$b} @subnt_ids;
-    return @subnt_ids;
-}
-
-sub to_arr {
-    my ($this, $records) = @_;
-    my @ret;
-    foreach($records->all){
-        my $record = $_;
-        delete $$record{_id};
-        $$record{caption} = $$record{name};
-        $$record{text} = $$record{name};
-        $$record{cls} = 'folder';
-        $$record{sub} = 1;
-        push  @ret, $record;
-    }
-    return @ret;
-}
 
 
 no Moose;
