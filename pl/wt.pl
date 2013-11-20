@@ -332,24 +332,35 @@ EOF
 
 sub bbkrepos {
     my ( $user, $pass) = @_;
-    my $ua = LWP::UserAgent->new;
-    my $encode_login = encode_base64($user. ":" . $pass);
-    my @headers = ('User-Agent' => 'Mozilla/5.0', 
-        Authorization => "Basic $encode_login", 
-    ); 
-    $ua->default_header(@headers);
+    my $cmd = "curl --user $user:$pass https://bitbucket.org/api/1.0/user/repositories";
+    my @res = readpipe $cmd;
 
-    my $response = $ua->get('https://api.bitbucket.org/1.0/user/repositories');
+    use JSON::Tiny;
+    my $json  = JSON::Tiny->new;
+    my $hash  = $json->decode(join '', @res);
+    @{$hash};
 
-    if ($response->is_success) {
-        use JSON::Tiny;
-        my $json  = JSON::Tiny->new;
-        my $hash  = $json->decode($response->decoded_content);
-        @{$hash};
-    }
-    else{
-        die $response->status_line;
-    }
+    # ua  not work
+#    my $ua = LWP::UserAgent->new();
+#    my $encode_login = encode_base64($user. ":" . $pass);
+#    my @headers = ('User-Agent' => 'curl/7.27.0', 
+#        Authorization => "Basic $encode_login", 
+#        Accept => '*/*'
+#    ); 
+#    $ua->default_header(@headers);
+#
+#    my $response = $ua->get('https://bitbucket.org/api/1.0/user/repositories');
+#
+#    if ($response->is_success) {
+#        use JSON::Tiny;
+#        my $json  = JSON::Tiny->new;
+#        my $hash  = $json->decode($response->decoded_content);
+#        @{$hash};
+#    }
+#    else{
+#        ptln Dumper $response;
+#        die $response->status_line;
+#    }
 }
 
 sub hgexec {
