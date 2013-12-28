@@ -20,7 +20,7 @@ BEGIN {
 our @ISA = qw(Exporter);
 our $VERSION = '0.102080';
 our @EXPORT = qw(
-    debug info warn error fatal ptln echo ptfile handle_file get_pid is_int strhashint
+    debug info warn error fatal ptln echo ptfile handle_file get_pid is_int strhashint fixhtml
 );
 
 sub debug($){ $log->debug(shift); }
@@ -104,6 +104,41 @@ sub strhashint($$){
     my $ret = $hash[0] | ($hash[1] <<8 ) | ($hash[2] <<16) | ($hash[3] <<24) | ($hash[4] <<32) | ($hash[5] <<40) | ($hash[6] <<48) | ($hash[7] <<56);
     $ret % $range;
 } 
+
+sub fixhtml($){
+    my $html = shift;
+    my @tags = $html =~ m/(<[^>]+>)/ig;
+    my $ret = '';
+    my @tagbegins = ();
+    foreach my $tag (@tags){
+        ($tag = $tag) =~ s/<.*\/>//;
+        ($tag = $tag) =~ s/<!DOCTYPE.*>//;
+        if($tag){
+            if($tag =~ /<\/.*>/){
+                my $i=$#tagbegins;
+                foreach my $tagbegin (reverse @tagbegins){
+                    if($tagbegin){
+                        ($tag = $tag) =~ s/<\//</;
+                        if($tag eq $tagbegin){
+                            undef $tagbegins[$i];
+                        }
+                    }
+                    $i--;
+                }
+            }
+            else{
+                push @tagbegins, $tag;
+            }
+        }
+    }
+    foreach my $tag (reverse @tagbegins){
+        if($tag){
+            ($tag = $tag) =~ s/</<\//;
+            $ret .= $tag;
+        }
+    }
+    return $ret;
+}
 
 1;
 

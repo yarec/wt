@@ -12,8 +12,6 @@ my $ntdao;
 
 # Run all tests
 sub run {
-    plan tests => 10;
-
     $ntdao = new wt::NtDao( "db"=>"test");
     test_count();
     test_nextval();

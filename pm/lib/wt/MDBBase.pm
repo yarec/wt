@@ -135,12 +135,13 @@ sub topid(){
 
 sub set_seq {
     my ($this, $val) = @_;
-    my $count = $this->db->seq->find({'seq'=>$this->seq})->count;
+    my $seq = $this->db->get_collection( 'seq' );
+    my $count = $seq->find({'seq'=>$this->seq})->count;
     if($count){
-        $this->db->seq->update({'seq'=>$this->seq}, {'$set'=>{id=>$val}});
+        $seq->update({'seq'=>$this->seq}, {'$set'=>{id=>$val}});
     }
     else{
-        $this->db->seq->insert({'seq'=>$this->seq, 'id'=>$val});
+        $seq->insert({'seq'=>$this->seq, 'id'=>$val});
     }
 }
 
